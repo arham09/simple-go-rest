@@ -5,6 +5,7 @@ type Books struct {
 	Name        string `form:"name" json:"name"`
 	Author      string `form:"author" json:"author"`
 	Description string `form:"description" json:"description"`
+	Status      int    `form:"status" json:"status"`
 	CreatedAt   string `form:"created_at" json:"created_at"`
 	UpdatedAt   string `form:"updated_at" json:"updated_at"`
 }

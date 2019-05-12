@@ -21,13 +21,13 @@ func GetBooks(w http.ResponseWriter, r *http.Request) {
 	db := config.Connect()
 	defer db.Close()
 
-	rows, err := db.Query("SELECT id, name, author, description, created_at, updated_at FROM books WHERE status = 1")
+	rows, err := db.Query("SELECT id, name, author, description, status, created_at, updated_at FROM books WHERE status = 1")
 	if err != nil {
 		log.Print(err)
 	}
 
 	for rows.Next() {
-		if err := rows.Scan(&book.ID, &book.Name, &book.Author, &book.Description, &book.CreatedAt, &book.UpdatedAt); err != nil {
+		if err := rows.Scan(&book.ID, &book.Name, &book.Author, &book.Description, &book.Status, &book.CreatedAt, &book.UpdatedAt); err != nil {
 			log.Fatal(err.Error())
 
 		} else {
@@ -51,13 +51,13 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 	db := config.Connect()
 	defer db.Close()
 
-	rows, err := db.Query("SELECT id, name, author, description, created_at, updated_at FROM books WHERE status = 1 AND id = ?", bookId)
+	rows, err := db.Query("SELECT id, name, author, description, status, created_at, updated_at FROM books WHERE status = 1 AND id = ?", bookId)
 	if err != nil {
 		log.Print(err)
 	}
 
 	for rows.Next() {
-		if err := rows.Scan(&book.ID, &book.Name, &book.Author, &book.Description, &book.CreatedAt, &book.UpdatedAt); err != nil {
+		if err := rows.Scan(&book.ID, &book.Name, &book.Author, &book.Description, &book.Status, &book.CreatedAt, &book.UpdatedAt); err != nil {
 			log.Fatal(err.Error())
 		}
 	}
@@ -82,10 +82,11 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	name := r.Form.Get("name")
 	author := r.Form.Get("author")
 	description := r.Form.Get("description")
+	status := 1
 	createdAt := time.Now()
 	updatedAt := time.Now()
 
-	_, err = db.Exec("INSERT INTO books(name, author, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?)", name, author, description, createdAt, updatedAt)
+	_, err = db.Exec("INSERT INTO books(name, author, description, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?)", name, author, description, status, createdAt, updatedAt)
 
 	if err != nil {
 		log.Print(err)
