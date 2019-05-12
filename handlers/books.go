@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -63,6 +64,35 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 
 	response.Status = http.StatusOK
 	response.Data = book
+
+	middlewares.Response(w, http.StatusOK, response)
+}
+
+func CreateBook(w http.ResponseWriter, r *http.Request) {
+	var response models.ResponseInsert
+
+	db := config.Connect()
+	defer db.Close()
+
+	err := r.ParseForm()
+	if err != nil {
+		log.Print(err)
+	}
+
+	name := r.Form.Get("name")
+	author := r.Form.Get("author")
+	description := r.Form.Get("description")
+	createdAt := time.Now()
+	updatedAt := time.Now()
+
+	_, err = db.Exec("INSERT INTO books(name, author, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?)", name, author, description, createdAt, updatedAt)
+
+	if err != nil {
+		log.Print(err)
+	}
+
+	response.Status = http.StatusOK
+	response.Message = "Successfully inserted"
 
 	middlewares.Response(w, http.StatusOK, response)
 }
