@@ -69,7 +69,7 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateBook(w http.ResponseWriter, r *http.Request) {
-	var response models.ResponseInsert
+	var response models.Response
 
 	db := config.Connect()
 	defer db.Close()
@@ -93,6 +93,37 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 
 	response.Status = http.StatusOK
 	response.Message = "Successfully inserted"
+
+	middlewares.Response(w, http.StatusOK, response)
+}
+
+func UpdateBook(w http.ResponseWriter, r *http.Request) {
+	var response models.Response
+
+	vars := mux.Vars(r)
+	bookId := vars["bookId"]
+
+	db := config.Connect()
+	defer db.Close()
+
+	err := r.ParseForm()
+	if err != nil {
+		log.Print(err)
+	}
+
+	name := r.Form.Get("name")
+	author := r.Form.Get("author")
+	description := r.Form.Get("description")
+	updatedAt := time.Now()
+
+	_, err = db.Exec("UPDATE books set name = ?, author = ?, description = ?, updated_at = ? where id = ?", name, author, description, updatedAt, bookId)
+
+	if err != nil {
+		log.Print(err)
+	}
+
+	response.Status = http.StatusOK
+	response.Message = "Successfully Updated"
 
 	middlewares.Response(w, http.StatusOK, response)
 }

@@ -10,7 +10,7 @@ type ResponseBook struct {
 	Data   Books `json:"data"`
 }
 
-type ResponseInsert struct {
+type Response struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
 }
