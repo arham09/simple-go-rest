@@ -1,7 +1,5 @@
-# Invoker
-API for Invoker Magic Joke
-
-[![Code Style](https://img.shields.io/badge/code%20style-standard-green.svg)](https://github.com/feross/standard)
+# Simple Go Rest
+Simple REST API to implement go
 
 
 [Run](#run) |
