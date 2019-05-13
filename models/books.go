@@ -40,3 +40,23 @@ func GetBooks() (*[]Books, error) {
 
 	return &books, err
 }
+
+func GetBook(bookId int) (*Books, error) {
+	var book Books
+
+	db := config.Connect()
+	defer db.Close()
+
+	rows, err := db.Query("SELECT id, name, author, description, status, created_at, updated_at FROM books WHERE status = 1 AND id = ?", bookId)
+	if err != nil {
+		log.Print(err)
+	}
+
+	for rows.Next() {
+		if err := rows.Scan(&book.ID, &book.Name, &book.Author, &book.Description, &book.Status, &book.CreatedAt, &book.UpdatedAt); err != nil {
+			log.Fatal(err.Error())
+		}
+	}
+
+	return &book, err
+}

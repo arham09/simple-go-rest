@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -28,28 +29,21 @@ func GetBooks(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetBook(w http.ResponseWriter, r *http.Request) {
-	var book models.Books
 	var response models.ResponseBook
 
 	vars := mux.Vars(r)
-	bookId := vars["bookId"]
-
-	db := config.Connect()
-	defer db.Close()
-
-	rows, err := db.Query("SELECT id, name, author, description, status, created_at, updated_at FROM books WHERE status = 1 AND id = ?", bookId)
+	bookId, err := strconv.Atoi(vars["bookId"])
 	if err != nil {
 		log.Print(err)
 	}
 
-	for rows.Next() {
-		if err := rows.Scan(&book.ID, &book.Name, &book.Author, &book.Description, &book.Status, &book.CreatedAt, &book.UpdatedAt); err != nil {
-			log.Fatal(err.Error())
-		}
+	book, err := models.GetBook(bookId)
+	if err != nil {
+		log.Print(err)
 	}
 
 	response.Status = http.StatusOK
-	response.Data = book
+	response.Data = *book
 
 	middlewares.Response(w, http.StatusOK, response)
 }
