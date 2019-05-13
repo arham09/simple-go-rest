@@ -42,13 +42,13 @@ func GetBooks() (*[]Books, error) {
 	return &books, err
 }
 
-func GetBook(bookId int) (*Books, error) {
+func GetBook(bookId *int) (*Books, error) {
 	var book Books
 
 	db := config.Connect()
 	defer db.Close()
 
-	rows, err := db.Query("SELECT id, name, author, description, status, created_at, updated_at FROM books WHERE status = 1 AND id = ?", bookId)
+	rows, err := db.Query("SELECT id, name, author, description, status, created_at, updated_at FROM books WHERE status = 1 AND id = ?", *bookId)
 	if err != nil {
 		log.Print(err)
 	}
@@ -71,6 +71,21 @@ func InsertBook(name *string, author *string, description *string) error {
 	updatedAt := time.Now()
 
 	_, err := db.Exec("INSERT INTO books(name, author, description, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)", *name, *author, *description, status, createdAt, updatedAt)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func EditBook(bookId *int, name *string, author *string, description *string) error {
+	db := config.Connect()
+	defer db.Close()
+
+	updatedAt := time.Now()
+
+	_, err := db.Exec("UPDATE books SET name = ?, author = ?, description = ?, updated_at = ? WHERE id = ?", *name, *author, *description, updatedAt, *bookId)
 
 	if err != nil {
 		return err

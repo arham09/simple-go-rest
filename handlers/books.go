@@ -35,7 +35,7 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 		log.Print(err)
 	}
 
-	book, err := models.GetBook(bookId)
+	book, err := models.GetBook(&bookId)
 	if err != nil {
 		log.Print(err)
 	}
@@ -71,36 +71,35 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	middlewares.Response(w, http.StatusOK, response)
 }
 
-// func UpdateBook(w http.ResponseWriter, r *http.Request) {
-// 	var response models.Response
+func UpdateBook(w http.ResponseWriter, r *http.Request) {
+	var response models.Response
 
-// 	vars := mux.Vars(r)
-// 	bookId := vars["bookId"]
+	vars := mux.Vars(r)
+	bookId, err := strconv.Atoi(vars["bookId"])
+	if err != nil {
+		log.Print(err)
+	}
 
-// 	db := config.Connect()
-// 	defer db.Close()
+	err = r.ParseForm()
+	if err != nil {
+		log.Print(err)
+	}
 
-// 	err := r.ParseForm()
-// 	if err != nil {
-// 		log.Print(err)
-// 	}
+	name := r.Form.Get("name")
+	author := r.Form.Get("author")
+	description := r.Form.Get("description")
 
-// 	name := r.Form.Get("name")
-// 	author := r.Form.Get("author")
-// 	description := r.Form.Get("description")
-// 	updatedAt := time.Now()
+	err = models.EditBook(&bookId, &name, &author, &description)
 
-// 	_, err = db.Exec("UPDATE books SET name = ?, author = ?, description = ?, updated_at = ? WHERE id = ?", name, author, description, updatedAt, bookId)
+	if err != nil {
+		log.Print(err)
+	}
 
-// 	if err != nil {
-// 		log.Print(err)
-// 	}
+	response.Status = http.StatusOK
+	response.Message = "Successfully Updated"
 
-// 	response.Status = http.StatusOK
-// 	response.Message = "Successfully Updated"
-
-// 	middlewares.Response(w, http.StatusOK, response)
-// }
+	middlewares.Response(w, http.StatusOK, response)
+}
 
 // func DeleteBook(w http.ResponseWriter, r *http.Request) {
 // 	var response models.Response
