@@ -3,6 +3,7 @@ package models
 import (
 	"book-rest/config"
 	"log"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -59,4 +60,21 @@ func GetBook(bookId int) (*Books, error) {
 	}
 
 	return &book, err
+}
+
+func InsertBook(name *string, author *string, description *string) error {
+	db := config.Connect()
+	defer db.Close()
+
+	status := 1
+	createdAt := time.Now()
+	updatedAt := time.Now()
+
+	_, err := db.Exec("INSERT INTO books(name, author, description, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)", *name, *author, *description, status, createdAt, updatedAt)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
