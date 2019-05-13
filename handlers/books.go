@@ -14,29 +14,15 @@ import (
 )
 
 func GetBooks(w http.ResponseWriter, r *http.Request) {
-	var book models.Books
-	var books []models.Books
 	var response models.ResponseBooks
 
-	db := config.Connect()
-	defer db.Close()
-
-	rows, err := db.Query("SELECT id, name, author, description, status, created_at, updated_at FROM books WHERE status = 1")
+	books, err := models.GetBooks()
 	if err != nil {
 		log.Print(err)
 	}
 
-	for rows.Next() {
-		if err := rows.Scan(&book.ID, &book.Name, &book.Author, &book.Description, &book.Status, &book.CreatedAt, &book.UpdatedAt); err != nil {
-			log.Fatal(err.Error())
-
-		} else {
-			books = append(books, book)
-		}
-	}
-
 	response.Status = http.StatusOK
-	response.Data = books
+	response.Data = *books
 
 	middlewares.Response(w, http.StatusOK, response)
 }
