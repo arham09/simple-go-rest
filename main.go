@@ -22,7 +22,7 @@ func main() {
 	api.HandleFunc("/books/{bookId}", handlers.GetBook).Methods("GET")
 	api.HandleFunc("/books/add", handlers.CreateBook).Methods("POST")
 	api.HandleFunc("/books/edit/{bookId}", handlers.UpdateBook).Methods("PUT")
-	// api.HandleFunc("/books/delete/{bookId}", handlers.DeleteBook).Methods("DELETE")
+	api.HandleFunc("/books/delete/{bookId}", handlers.DeleteBook).Methods("DELETE")
 
 	fmt.Println("Connected to port 2019")
 	http.Handle("/", middlewares.PanicRecoveryHandler(ghandlers.LoggingHandler(os.Stdout, router)))

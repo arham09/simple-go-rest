@@ -93,3 +93,19 @@ func EditBook(bookId *int, name *string, author *string, description *string) er
 
 	return nil
 }
+
+func RemoveBook(bookId *int) error {
+	db := config.Connect()
+	defer db.Close()
+
+	status := 0
+	updatedAt := time.Now()
+
+	_, err := db.Exec("UPDATE books SET status = ?, updated_at = ? WHERE id = ?", status, updatedAt, *bookId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

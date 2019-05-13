@@ -101,26 +101,23 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	middlewares.Response(w, http.StatusOK, response)
 }
 
-// func DeleteBook(w http.ResponseWriter, r *http.Request) {
-// 	var response models.Response
+func DeleteBook(w http.ResponseWriter, r *http.Request) {
+	var response models.Response
 
-// 	vars := mux.Vars(r)
-// 	bookId := vars["bookId"]
+	vars := mux.Vars(r)
+	bookId, err := strconv.Atoi(vars["bookId"])
+	if err != nil {
+		log.Print(err)
+	}
 
-// 	db := config.Connect()
-// 	defer db.Close()
+	err = models.RemoveBook(&bookId)
 
-// 	status := 0
-// 	updatedAt := time.Now()
+	if err != nil {
+		log.Print(err)
+	}
 
-// 	_, err := db.Exec("UPDATE books SET status = ?, updated_at = ? WHERE id = ?", status, updatedAt, bookId)
+	response.Status = http.StatusOK
+	response.Message = "Successfully Deleted"
 
-// 	if err != nil {
-// 		log.Print(err)
-// 	}
-
-// 	response.Status = http.StatusOK
-// 	response.Message = "Successfully Deleted"
-
-// 	middlewares.Response(w, http.StatusOK, response)
-// }
+	middlewares.Response(w, http.StatusOK, response)
+}
