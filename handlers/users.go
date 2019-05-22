@@ -32,6 +32,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	status, err := models.CheckUser(&email)
 	if err != nil {
 		log.Print(err)
+		return
 	}
 
 	if *status == 1 {
@@ -53,4 +54,34 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	response.Message = "Successfully inserted"
 
 	middlewares.Response(w, http.StatusOK, response)
+}
+
+func LoginUser(w http.ResponseWriter, r *http.Request) {
+	var response models.ResponseLogin
+
+	err := r.ParseForm()
+	if err != nil {
+		log.Print(err)
+		return
+	}
+
+	email := r.Form.Get("email")
+	password := middlewares.EncryptPassword(r.Form.Get("password"))
+
+	user, err := models.GetUser(&email)
+	if err != nil {
+		log.Print(err)
+	}
+
+	if user.Password == password {
+		response.Status = http.StatusOK
+		response.Message = "Successfully inserted"
+		response.AccessToken = "sdasdasdasdas"
+
+		middlewares.Response(w, http.StatusOK, response)
+	} else {
+
+		middlewares.Error(w, 400, "Wrong Password")
+	}
+
 }
