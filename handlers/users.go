@@ -76,6 +76,9 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if user.Password == password {
 		response.Status = http.StatusOK
 		response.Message = "Successfully inserted"
+		response.ID = user.ID
+		response.Email = user.Email
+		response.Name = user.Name
 		response.AccessToken = "sdasdasdasdas"
 
 		middlewares.Response(w, http.StatusOK, response)
