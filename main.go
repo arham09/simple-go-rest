@@ -24,6 +24,8 @@ func main() {
 	api.HandleFunc("/books/edit/{bookId}", handlers.UpdateBook).Methods("PUT")
 	api.HandleFunc("/books/delete/{bookId}", handlers.DeleteBook).Methods("DELETE")
 
+	api.HandleFunc("/users/register", handlers.RegisterUser).Methods("POST")
+
 	fmt.Println("Connected to port 2019")
 	http.Handle("/", middlewares.PanicRecoveryHandler(ghandlers.LoggingHandler(os.Stdout, router)))
 	log.Fatal(http.ListenAndServe(":2019", nil))

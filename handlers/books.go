@@ -52,6 +52,7 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		log.Print(err)
+		return
 	}
 
 	name := r.Form.Get("name")
@@ -63,6 +64,7 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print("ada error")
 		log.Print(err)
+		return
 	}
 
 	response.Status = http.StatusOK
