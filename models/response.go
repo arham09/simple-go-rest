@@ -10,13 +10,17 @@ type ResponseBook struct {
 	Data   Books `json:"data"`
 }
 
-type ResponseLogin struct {
-	Status      int    `json:"status"`
-	Message     string `json:"message"`
+type ResponseUser struct {
 	ID          int    `json:"id"`
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	AccessToken string `json:"access_token"`
+}
+
+type ResponseLogin struct {
+	Status  int          `json:"status"`
+	Message string       `json:"message"`
+	Data    ResponseUser `json:"data"`
 }
 
 type Response struct {

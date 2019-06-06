@@ -96,10 +96,10 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 		response.Status = http.StatusOK
 		response.Message = "Login Success"
-		response.ID = user.ID
-		response.Email = user.Email
-		response.Name = user.Name
-		response.AccessToken = token
+		response.Data.ID = user.ID
+		response.Data.Email = user.Email
+		response.Data.Name = user.Name
+		response.Data.AccessToken = token
 
 		middlewares.Response(w, http.StatusOK, response)
 	} else {
