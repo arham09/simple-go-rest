@@ -10,8 +10,8 @@ import (
 	ghandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
-	"book-rest/handlers"
-	"book-rest/middlewares"
+	"github.com/arham09/book-rest/handlers"
+	"github.com/arham09/book-rest/middlewares"
 )
 
 func main() {

@@ -8,8 +8,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 
-	"book-rest/middlewares"
-	"book-rest/models"
+	"github.com/arham09/book-rest/middlewares"
+	"github.com/arham09/book-rest/models"
 )
 
 func GetBooks(w http.ResponseWriter, r *http.Request) {

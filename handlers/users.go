@@ -8,8 +8,8 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"book-rest/middlewares"
-	"book-rest/models"
+	"github.com/arham09/book-rest/middlewares"
+	"github.com/arham09/book-rest/models"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )

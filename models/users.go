@@ -1,9 +1,10 @@
 package models
 
 import (
-	"book-rest/config"
 	"log"
 	"time"
+
+	"github.com/arham09/book-rest/config"
 
 	_ "github.com/go-sql-driver/mysql"
 )
