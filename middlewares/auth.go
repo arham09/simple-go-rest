@@ -3,18 +3,23 @@ package middlewares
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
 var signingKey = []byte("aqOeh4ck3R")
 
-func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) http.Handler {
+func Authorized(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		if r.Header["Token"] != nil {
+		if r.Header["Authorization"] != nil {
 
-			token, err := jwt.Parse(r.Header["Token"][0], func(token *jwt.Token) (interface{}, error) {
+			rawToken := r.Header["Authorization"][0]
+			splitToken := strings.Split(rawToken, "Bearer")
+			validToken := strings.TrimSpace(splitToken[1])
+
+			token, err := jwt.Parse(validToken, func(token *jwt.Token) (interface{}, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 					return nil, fmt.Errorf("There was an error")
 				}
@@ -22,15 +27,14 @@ func isAuthorized(endpoint func(http.ResponseWriter, *http.Request)) http.Handle
 			})
 
 			if err != nil {
-				fmt.Fprintf(w, err.Error())
+				Error(w, 400, err.Error())
 			}
 
 			if token.Valid {
-				endpoint(w, r)
+				next(w, r)
 			}
 		} else {
-
-			fmt.Fprintf(w, "Not Authorized")
+			Error(w, 400, "Not Authorized")
 		}
 	})
 }

@@ -18,7 +18,7 @@ func main() {
 	router := mux.NewRouter()
 
 	api := router.PathPrefix("/v1").Subrouter()
-	api.HandleFunc("/books", handlers.GetBooks).Methods("GET")
+	api.HandleFunc("/books", middlewares.Authorized(handlers.GetBooks)).Methods("GET")
 	api.HandleFunc("/books/{bookId}", handlers.GetBook).Methods("GET")
 	api.HandleFunc("/books/add", handlers.CreateBook).Methods("POST")
 	api.HandleFunc("/books/edit/{bookId}", handlers.UpdateBook).Methods("PUT")
