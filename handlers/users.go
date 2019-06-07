@@ -3,7 +3,6 @@ package handlers
 import (
 	"log"
 	"net/http"
-	"regexp"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -17,8 +16,6 @@ import (
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	var response models.Response
 
-	re := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
-
 	err := r.ParseForm()
 	if err != nil {
 		log.Print(err)
@@ -28,7 +25,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	email := r.Form.Get("email")
 	password := middlewares.EncryptPassword(r.Form.Get("password"))
 
-	if re.MatchString(email) == false {
+	if middlewares.VerifyEmail(email) == false {
 		middlewares.Error(w, 400, "Email Invalid")
 		return
 	}
