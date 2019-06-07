@@ -10,6 +10,7 @@ import (
 
 var signingKey = []byte("aqOeh4ck3R")
 
+//Authorized - Middleware to check validation of JWT
 func Authorized(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
