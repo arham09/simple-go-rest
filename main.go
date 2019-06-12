@@ -19,10 +19,10 @@ func main() {
 
 	api := router.PathPrefix("/v1").Subrouter()
 	api.HandleFunc("/books", middlewares.Authorized(handlers.GetBooks)).Methods("GET")
-	api.HandleFunc("/books/{bookId}", handlers.GetBook).Methods("GET")
-	api.HandleFunc("/books/add", handlers.CreateBook).Methods("POST")
-	api.HandleFunc("/books/edit/{bookId}", handlers.UpdateBook).Methods("PUT")
-	api.HandleFunc("/books/delete/{bookId}", handlers.DeleteBook).Methods("DELETE")
+	api.HandleFunc("/books/{bookId}", middlewares.Authorized(handlers.GetBook)).Methods("GET")
+	api.HandleFunc("/books/add", middlewares.Authorized(handlers.CreateBook)).Methods("POST")
+	api.HandleFunc("/books/edit/{bookId}", middlewares.Authorized(handlers.UpdateBook)).Methods("PUT")
+	api.HandleFunc("/books/delete/{bookId}", middlewares.Authorized(handlers.DeleteBook)).Methods("DELETE")
 
 	api.HandleFunc("/users/register", handlers.RegisterUser).Methods("POST")
 	api.HandleFunc("/users/login", handlers.LoginUser).Methods("POST")

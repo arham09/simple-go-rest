@@ -8,7 +8,7 @@ Simple REST API to implement go
 ## Run
 
 ### Prerequisites
-- Go - Download and Install [Node.js](https://golang.org/dl/) - Install Golang
+- Go - Download and Install [Golang](https://golang.org/dl/) - Install Golang
 - MySQL - Download and Install [MySQL](https://www.mysql.com/downloads/) - Make sure it's running on the default port.
 
 ```
