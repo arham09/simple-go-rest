@@ -10,7 +10,7 @@ import (
 )
 
 type Books struct {
-	ID          int    `form:"id" json:"id"`
+	ID          int64  `form:"id" json:"id"`
 	Name        string `form:"name" json:"name"`
 	Author      string `form:"author" json:"author"`
 	Description string `form:"description" json:"description"`
@@ -63,7 +63,9 @@ func GetBook(bookId *int) (*Books, error) {
 	return &book, err
 }
 
-func InsertBook(name *string, author *string, description *string) error {
+func InsertBook(name *string, author *string, description *string) (*Books, error) {
+	var book Books
+
 	db := config.Connect()
 	defer db.Close()
 
@@ -71,13 +73,23 @@ func InsertBook(name *string, author *string, description *string) error {
 	createdAt := time.Now()
 	updatedAt := time.Now()
 
-	_, err := db.Exec("INSERT INTO books(name, author, description, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)", *name, *author, *description, status, createdAt, updatedAt)
+	res, err := db.Exec("INSERT INTO books(name, author, description, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)", *name, *author, *description, status, createdAt, updatedAt)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	id, _ := res.LastInsertId()
+
+	book.ID = id
+	book.Name = *name
+	book.Author = *author
+	book.Description = *description
+	book.Status = status
+	book.CreatedAt = createdAt.String()
+	book.UpdatedAt = updatedAt.String()
+
+	return &book, err
 }
 
 func EditBook(bookId *int, name *string, author *string, description *string) error {

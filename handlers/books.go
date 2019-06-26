@@ -38,6 +38,7 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 	book, err := models.GetBook(&bookId)
 	if err != nil {
 		log.Print(err)
+		return
 	}
 
 	response.Status = http.StatusOK
@@ -47,7 +48,7 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateBook(w http.ResponseWriter, r *http.Request) {
-	var response models.Response
+	var response models.ResponseBook
 
 	err := r.ParseForm()
 	if err != nil {
@@ -59,7 +60,7 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	author := r.Form.Get("author")
 	description := r.Form.Get("description")
 
-	err = models.InsertBook(&name, &author, &description)
+	book, err := models.InsertBook(&name, &author, &description)
 
 	if err != nil {
 		log.Print("ada error")
@@ -68,7 +69,7 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Status = http.StatusOK
-	response.Message = "Successfully inserted"
+	response.Data = *book
 
 	middlewares.Response(w, http.StatusOK, response)
 }
